@@ -17,10 +17,10 @@ public:
   bool debug=false; 
 
   explicit ElectronRegresser(const edm::ParameterSet &cfg):
-    lowpt_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("lowptSrc") )},
+//    lowpt_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("lowptSrc") )},
     pf_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("pfSrc") )}
     {
-
+/*
       // LPT regression stuff                                                                                                         
       if( cfg.existsAs<edm::ParameterSet>("lowPtRegressionConfig") ) {
 	const edm::ParameterSet& iconf = cfg.getParameterSet("lowPtRegressionConfig");
@@ -32,7 +32,7 @@ public:
 	regression_->setConsumes(sumes);
       } else {
 	regression_.reset(nullptr);
-      }
+      }*/
 
       // PF regression                                                                                                           
       if( cfg.existsAs<edm::ParameterSet>("gsfRegressionConfig") ) {
@@ -62,27 +62,27 @@ private:
   const edm::EDGetTokenT<pat::ElectronCollection> pf_src_;
 
   // regression stuff                                                                                                                                         
-  std::unique_ptr<ModifyObjectValueBase> regression_; // Low pt                                                                                               
+//  std::unique_ptr<ModifyObjectValueBase> regression_; // Low pt                                                                                               
   std::unique_ptr<ModifyObjectValueBase> regressionGsf_; // Gsf                                                                                               
 };
 
 void ElectronRegresser::produce(edm::StreamID, edm::Event &evt, edm::EventSetup const & iSetup) const {
 
   //input
-  edm::Handle<pat::ElectronCollection> lowpt;
-  evt.getByToken(lowpt_src_, lowpt);
+//  edm::Handle<pat::ElectronCollection> lowpt;
+//  evt.getByToken(lowpt_src_, lowpt);
   edm::Handle<pat::ElectronCollection> pf;
   evt.getByToken(pf_src_, pf);
 
   // regression stuff
-  regression_->setEvent(evt);
-  regression_->setEventContent(iSetup);
+//  regression_->setEvent(evt);
+//  regression_->setEventContent(iSetup);
   regressionGsf_->setEvent(evt);
   regressionGsf_->setEventContent(iSetup);
 
   // output
   std::unique_ptr<pat::ElectronCollection>  ele_out_pf      (new pat::ElectronCollection );
-  std::unique_ptr<pat::ElectronCollection>  ele_out_lpt      (new pat::ElectronCollection );
+//  std::unique_ptr<pat::ElectronCollection>  ele_out_lpt      (new pat::ElectronCollection );
 
   // PF regression
   size_t ipfele=-1;
@@ -108,7 +108,7 @@ void ElectronRegresser::produce(edm::StreamID, edm::Event &evt, edm::EventSetup 
      
    ele_out_pf -> emplace_back(ele);
   }
-
+/*
   // LowPt regression
   size_t iele=-1;
   for(auto ele : *lowpt) {
@@ -132,10 +132,10 @@ void ElectronRegresser::produce(edm::StreamID, edm::Event &evt, edm::EventSetup 
    }
 
    ele_out_lpt -> emplace_back(ele);
-  }
+  }*/
    
   // put collections in the event
-  evt.put(std::move(ele_out_lpt),  "regressedLowPtElectrons");
+//  evt.put(std::move(ele_out_lpt),  "regressedLowPtElectrons");
   evt.put(std::move(ele_out_pf),  "regressedElectrons");
 }
 

@@ -4,6 +4,7 @@ from PhysicsTools.NanoAOD.common_cff import *
 from PhysicsTools.NanoAOD.globals_cff import *
 from PhysicsTools.NanoAOD.nano_cff import *
 from PhysicsTools.NanoAOD.vertices_cff import *
+from PhysicsTools.NanoAOD.jets_cff import *
 from PhysicsTools.NanoAOD.NanoAODEDMEventContent_cff import *
 from PhysicsTools.BParkingNano.trgbits_cff import *
 
@@ -28,10 +29,10 @@ nanoSequenceOnlyFullSim = cms.Sequence(triggerObjectBParkTables + l1bits)
 
 nanoSequence = cms.Sequence(nanoMetadata + 
                             vertexSequence +           
-                            globalTables + vertexTables + 
+                            globalTables + vertexTables + jetSequence + jetTables +
                             triggerObjectBParkTables + l1bits)
 
-nanoSequenceMC = cms.Sequence(particleLevelBParkSequence + genParticleBParkSequence + 
+nanoSequenceMC = cms.Sequence(particleLevelBParkSequence + genParticleBParkSequence + jetMC +
                               globalTablesMC + genWeightsTable + genParticleBParkTables + lheInfoTable) 
 
 

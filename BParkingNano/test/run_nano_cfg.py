@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 
 options = VarParsing('python')
 
-options.register('isMC', False,
+options.register('isMC', True,
     VarParsing.multiplicity.singleton,
     VarParsing.varType.bool,
     "Run this on real data"
@@ -34,7 +34,7 @@ options.register('skip', 0,
     "skip first N events"
 )
 
-options.setDefault('maxEvents', 100)
+options.setDefault('maxEvents', 1000)
 options.setDefault('tag', '10215')
 options.parseArguments()
 
@@ -46,9 +46,9 @@ extension = {False : 'data', True : 'mc'}
 outputFileNANO = cms.untracked.string('_'.join(['BParkNANO', extension[options.isMC], options.tag])+'.root')
 outputFileFEVT = cms.untracked.string('_'.join(['BParkFullEvt', extension[options.isMC], options.tag])+'.root')
 if not options.inputFiles:
-    options.inputFiles = ['/store/data/Run2018B/ParkingBPH4/MINIAOD/05May2019-v2/230000/6B5A24B1-0E6E-504B-8331-BD899EB60110.root'] if not options.isMC else \
-                         ['/store/cmst3/group/bpark/BToKmumu_1000Events_MINIAOD.root']
+    options.inputFiles = ['/store/mc/RunIIAutumn18MiniAOD/GluGluHToBB_M125_13TeV_powheg_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/CFBFCA29-1649-2345-970E-731824064446.root'] if not options.isMC else ['/store/mc/RunIIAutumn18MiniAOD/GluGluHToBB_M125_13TeV_powheg_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/CFBFCA29-1649-2345-970E-731824064446.root']#['/store/mc/RunIIAutumn18NanoAOD/GluGluHToBB_M125_13TeV_powheg_pythia8/NANOAODSIM/102X_upgrade2018_realistic_v15-v1/90000/D6407856-BDE7-C341-B778-0406CA4A2136.root']
 annotation = '%s nevts:%d' % (outputFileNANO, options.maxEvents)
+#'/store/data/Run2018B/ParkingBPH4/MINIAOD/05May2019-v2/230000/6B5A24B1-0E6E-504B-8331-BD899EB60110.root']
 
 from Configuration.StandardSequences.Eras import eras
 process = cms.Process('BParkNANO',eras.Run2_2018)
@@ -242,7 +242,7 @@ process = nanoAOD_customizeTriggerBitsBPark(process)
 
 
 # Path and EndPath definitions
-process.nanoAOD_KMuMu_step = cms.Path(process.nanoSequence + process.nanoBKMuMuSequence + CountBToKmumu )
+process.nanoAOD_KMuMu_step = cms.Path(process.nanoSequence + process.nanoBKMuMuSequence)
 process.nanoAOD_Kee_step   = cms.Path(process.nanoSequence + process.nanoBKeeSequence   + CountBToKee   )
 process.nanoAOD_KstarMuMu_step = cms.Path(process.nanoSequence + process.KstarToKPiSequence + process.nanoBKstarMuMuSequence + CountBToKstarMuMu )
 process.nanoAOD_KstarEE_step  = cms.Path(process.nanoSequence+ process.KstarToKPiSequence + process.nanoBKstarEESequence + CountBToKstarEE  )

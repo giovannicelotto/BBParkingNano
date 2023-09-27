@@ -36,7 +36,7 @@ public:
 
   explicit ElectronMerger(const edm::ParameterSet &cfg):
     triggerMuons_{ consumes<pat::MuonCollection>( cfg.getParameter<edm::InputTag>("trgMuon") )},
-    lowpt_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("lowptSrc") )},
+//    lowpt_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("lowptSrc") )},
     pf_src_{ consumes<pat::ElectronCollection>( cfg.getParameter<edm::InputTag>("pfSrc") )},
     ptBiased_src_{ consumes<edm::ValueMap<float>>( cfg.getParameter<edm::InputTag>("ptbiasedSeeding") )},
     unBiased_src_{ consumes<edm::ValueMap<float>>( cfg.getParameter<edm::InputTag>("unbiasedSeeding") )},
@@ -72,7 +72,7 @@ public:
   
 private:
   const edm::EDGetTokenT<pat::MuonCollection> triggerMuons_;
-  const edm::EDGetTokenT<pat::ElectronCollection> lowpt_src_;
+  //const edm::EDGetTokenT<pat::ElectronCollection> lowpt_src_;
   const edm::EDGetTokenT<pat::ElectronCollection> pf_src_;
   const edm::EDGetTokenT<edm::ValueMap<float>> ptBiased_src_;
   const edm::EDGetTokenT<edm::ValueMap<float>> unBiased_src_;
@@ -103,8 +103,8 @@ void ElectronMerger::produce(edm::StreamID, edm::Event &evt, edm::EventSetup con
   //input
   edm::Handle<pat::MuonCollection> trgMuon;
   evt.getByToken(triggerMuons_, trgMuon);
-  edm::Handle<pat::ElectronCollection> lowpt;
-  evt.getByToken(lowpt_src_, lowpt);
+//  edm::Handle<pat::ElectronCollection> lowpt;
+//  evt.getByToken(lowpt_src_, lowpt);
   edm::Handle<pat::ElectronCollection> pf;
   evt.getByToken(pf_src_, pf);
   edm::Handle<edm::ValueMap<float> > ptBiased;
@@ -200,7 +200,7 @@ void ElectronMerger::produce(edm::StreamID, edm::Event &evt, edm::EventSetup con
   }
 
   unsigned int pfSelectedSize = pfEtaPhi.size();
-
+/*
   if ( saveLowPtE_ ) {
   size_t iele=-1;
   /// add and clean low pT e
@@ -275,9 +275,9 @@ void ElectronMerger::produce(edm::StreamID, edm::Event &evt, edm::EventSetup con
                    reco::deltaR(ele.eta(), ele.phi(), pfEtaPhi[iEle].first, pfEtaPhi[iEle].second) < dr_cleaning_   );
 
    }
-   if(clean_out && flagAndclean_) continue;
-   else if(clean_out) ele.addUserInt("isPFoverlap", 1);
-   else ele.addUserInt("isPFoverlap", 0);
+ //  if(clean_out && flagAndclean_) continue;
+//   else if(clean_out) ele.addUserInt("isPFoverlap", 1);
+//   else ele.addUserInt("isPFoverlap", 0);
 
    const reco::GsfTrackRef gsfTrk = ele.gsfTrack();
    float unbiased_seedBDT = float((*unBiased)[gsfTrk]);
@@ -309,7 +309,7 @@ void ElectronMerger::produce(edm::StreamID, edm::Event &evt, edm::EventSetup con
 
    ele_out       -> emplace_back(ele);
   }
-}
+}*/
   if(sortOutputCollections_){
 
     //sorting increases sligtly the time but improves the code efficiency in the Bcandidate builder
