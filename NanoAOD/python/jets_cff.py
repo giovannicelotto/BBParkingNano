@@ -571,7 +571,7 @@ jetTables = cms.Sequence(jetTable+fatJetTable+subJetTable+saJetTable+saTable)
 
 #MC only producers and tables
 #jetMC = cms.Sequence(jetMCTable+genJetTable+patJetPartons+genJetFlavourTable+genJetAK8Table+genJetAK8FlavourAssociation+genJetAK8FlavourTable+genSubJetAK8Table)
-jetMC = cms.Sequence(genJetTable+patJetPartons+genJetFlavourTable+genJetAK8Table+genJetAK8FlavourAssociation+genJetAK8FlavourTable+genSubJetAK8Table)
+jetMC = cms.Sequence(jetSequence+jetMCTable+genJetTable+patJetPartons+genJetFlavourTable+genJetAK8Table+genJetAK8FlavourAssociation+genJetAK8FlavourTable+genSubJetAK8Table)
 _jetMC_pre94X = jetMC.copy()
 _jetMC_pre94X.insert(_jetMC_pre94X.index(genJetFlavourTable),genJetFlavourAssociation)
 _jetMC_pre94X.remove(genSubJetAK8Table)
