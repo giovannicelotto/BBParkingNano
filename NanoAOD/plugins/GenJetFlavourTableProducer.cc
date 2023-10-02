@@ -68,7 +68,11 @@ GenJetFlavourTableProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 
     unsigned int ncand = 0;
     std::vector<int> partonFlavour;
+    std::vector<int> partonMotherIdx;
+    std::vector<int> partonMotherPdgId;
     std::vector<uint8_t> hadronFlavour;
+    int motherIdx;
+    int motherPdgId;
     
     for (const reco::GenJet & jet : *jets) {
       if (!cut_(jet)) continue;
@@ -77,6 +81,23 @@ GenJetFlavourTableProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
       for (const reco::JetFlavourInfoMatching & jetFlavourInfoMatching : *jetFlavourInfos) {
         if (deltaR(jet.p4(), jetFlavourInfoMatching.first->p4()) < deltaR_) {
           partonFlavour.push_back(jetFlavourInfoMatching.second.getPartonFlavour());
+
+//	  std::cout << "Partons size " << jetFlavourInfoMatching.second.getPartons().size()<< std::endl;
+
+	  //If parton has a mother, fetch idx and pdg Id information
+	  if (jetFlavourInfoMatching.second.getPartons().size()!= 0 and jetFlavourInfoMatching.second.getPartons().at(0)->numberOfMothers()>0){ 
+		motherIdx = int(jetFlavourInfoMatching.second.getPartons().at(0)->motherRef(0).key());
+		motherPdgId = int(jetFlavourInfoMatching.second.getPartons().at(0)->motherRef(0)->pdgId());
+	  }
+	  else{
+	   motherIdx = -1;
+	   motherPdgId = -1;
+	  }
+//	  std::cout << motherIdx << std::endl;
+          partonMotherIdx.push_back(motherIdx);
+          partonMotherPdgId.push_back(motherPdgId);
+//	  std::cout << motherIdx << std::endl;
+
           hadronFlavour.push_back(jetFlavourInfoMatching.second.getHadronFlavour());
           matched = true;
           break;
@@ -84,6 +105,8 @@ GenJetFlavourTableProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
       }
       if (!matched) {
         partonFlavour.push_back(0);
+        partonMotherIdx.push_back(0);
+        partonMotherPdgId.push_back(0);
         hadronFlavour.push_back(0);
       }
     }
@@ -91,6 +114,8 @@ GenJetFlavourTableProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
     auto tab  = std::make_unique<nanoaod::FlatTable>(ncand, name_, false, true);
     tab->addColumn<int>("partonFlavour", partonFlavour, "flavour from parton matching", nanoaod::FlatTable::IntColumn);
     tab->addColumn<uint8_t>("hadronFlavour", hadronFlavour, "flavour from hadron ghost clustering", nanoaod::FlatTable::UInt8Column);
+    tab->addColumn<int>("partonMotherIdx", partonMotherIdx, "parton mother Idx", nanoaod::FlatTable::IntColumn);
+    tab->addColumn<int>("partonMotherPdgId", partonMotherPdgId, "parton mother pdgId", nanoaod::FlatTable::IntColumn);
 
     iEvent.put(std::move(tab));
 }
