@@ -2,6 +2,9 @@ import FWCore.ParameterSet.Config as cms
 from Configuration.Eras.Modifier_run2_miniAOD_80XLegacy_cff import run2_miniAOD_80XLegacy
 from Configuration.Eras.Modifier_run2_nanoAOD_94X2016_cff import run2_nanoAOD_94X2016
 
+
+from PhysicsTools.NanoAOD.nanoDQM_tools_cff import *
+
 from  PhysicsTools.NanoAOD.common_cff import *
 from RecoJets.JetProducers.ak4PFJetsBetaStar_cfi import *
 
@@ -186,7 +189,7 @@ finalJetsAK8 = cms.EDFilter("PATJetRefSelector",
 
 
 jetTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
-    src = cms.InputTag("finalJets"),
+    src = cms.InputTag("linkedObjects","jets"),
     cut = cms.string(""), #we should not filter on cross linked collections
     name = cms.string("Jet"),
     doc  = cms.string("slimmedJets, i.e. ak4 PFJets CHS with JECs applied, after basic selection (" + finalJets.cut.value()+")"),
@@ -199,7 +202,7 @@ jetTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
   #  ),
     variables = cms.PSet(P4Vars,
         area = Var("jetArea()", float, doc="jet catchment area, for JECs",precision=10),
-        nMuons = Var("?hasOverlaps('muons')?overlaps('muons').size():0", int, doc="number of muons in the jet"),
+        nMuons = Var("?hasOverlaps('muons')?overlaps('muons').size():0", "uint8", doc="number of muons in the jet"),
         muonIdx1 = Var("?overlaps('muons').size()>0?overlaps('muons')[0].key():-1", int, doc="index of first matching muon"),
         muonIdx2 = Var("?overlaps('muons').size()>1?overlaps('muons')[1].key():-1", int, doc="index of second matching muon"),
         electronIdx1 = Var("?overlaps('electrons').size()>0?overlaps('electrons')[0].key():-1", int, doc="index of first matching electron"),
