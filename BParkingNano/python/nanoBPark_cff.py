@@ -62,7 +62,7 @@ def nanoAOD_customizeMuonTriggerBPark(process):
     return process
 
 def nanoAOD_customizeTrackFilteredBPark(process):
-    process.nanoSequence = cms.Sequence( process.nanoSequence + tracksBParkSequence + tracksBParkTables)
+    #process.nanoSequence = cms.Sequence( process.nanoSequence + tracksBParkSequence + tracksBParkTables)
     return process
 
 def nanoAOD_customizeElectronFilteredBPark(process):
